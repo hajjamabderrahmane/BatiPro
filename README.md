@@ -93,7 +93,7 @@ php artisan migrate
 
 La commande `jwt:secret` est à exécuter si elle est disponible dans la configuration JWT du projet.
 
-### Créer le compte administrateur de développement
+### Créer les comptes et les données de démonstration
 
 Après les migrations, exécuter :
 
@@ -101,15 +101,17 @@ Après les migrations, exécuter :
 php artisan db:seed
 ```
 
-Le seeder crée ou met à jour le compte administrateur local suivant :
+En environnement local, le seeder crée ou met à jour les comptes de démonstration suivants :
 
-| Champ | Valeur |
-|---|---|
-| E-mail | `admin@batipro.local` |
-| Mot de passe initial | `ChangeMe123!` |
-| Rôle | `admin` |
+| Rôle | E-mail | Mot de passe initial |
+|---|---|---|
+| Administrateur | `admin@batipro.test` | `BatiPro@123` |
+| Chef de chantier | `chef@batipro.test` | `BatiPro@123` |
+| Employé | `employe@batipro.test` | `BatiPro@123` |
 
-Ce compte est destiné au développement local uniquement. Changer son mot de passe avant toute utilisation dans un environnement partagé ou en production. Le seeder ne crée pas automatiquement de chantiers, d'affectations ou de présences.
+Le seeder crée également un chantier de démonstration à Casablanca et affecte le chef de chantier ainsi que l'employé à ce chantier. Il ignore les données de démonstration lorsque l'environnement Laravel est `production`.
+
+**Attention :** `updateOrCreate` peut mettre à jour les informations des comptes de démonstration et les affectations correspondantes lorsqu'ils existent déjà. Exécuter le seeder uniquement sur une base de développement dont les données ont été vérifiées. Les identifiants ci-dessus sont réservés aux tests locaux : ne pas les utiliser dans un environnement partagé ou en production.
 
 ### Démarrer l'API
 
