@@ -1,18 +1,18 @@
 <?php
 
-namespace Database\\Seeders;
+namespace Database\Seeders;
 
-use App\\Models\\Utilisateur;
-use Illuminate\\Database\\Console\\Seeds\\WithoutModelEvents;
-use Illuminate\\Database\\Seeder;
-use Illuminate\\Support\\Facades\\Hash;
+use App\Models\Utilisateur;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
     /**
-     * Seed the application's database with a local development administrator.
+     * Seed a local development administrator.
      */
     public function run(): void
     {
