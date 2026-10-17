@@ -45,10 +45,10 @@ npm -v
 
 ## Récupérer le projet
 
-Pour récupérer la branche contenant cette version du projet :
+Pour récupérer la version présentée dans la branche principale :
 
 ```powershell
-git clone -b restore-before-seeder https://github.com/hajjamabderrahmane/BatiPro.git
+git clone -b main https://github.com/hajjamabderrahmane/BatiPro.git
 cd BatiPro
 ```
 
