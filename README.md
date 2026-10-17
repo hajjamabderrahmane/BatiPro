@@ -31,7 +31,7 @@ BatiPro/
 
 ## Prérequis
 
-Installer Git, PHP avec les extensions nécessaires à Laravel, Composer, MySQL, Node.js et npm. Pour tester l'application mobile, utiliser Expo Go compatible avec la version du projet ou un émulateur Android configuré.
+Installer Git, **PHP 8.3 ou supérieur** (requis par le back-end Laravel), Composer, MySQL, ainsi que **Node.js et npm** compatibles avec Vite 8 (Node.js 20.19+ ou 22.12+ recommandé). Pour tester l'application mobile, utiliser Expo Go compatible avec Expo SDK 51 ou un émulateur Android configuré.
 
 Vérifier les installations :
 
