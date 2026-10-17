@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "BatiPro",
+    "slug": "batipro",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#1E3A5F"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.batipro.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#1E3A5F"
+      },
+      "package": "com.batipro.app"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "BatiPro a besoin de la caméra pour scanner les QR codes du chantier.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "BatiPro a besoin de votre position GPS pour vérifier votre présence sur le chantier."
+        }
+      ]
+    ],
+    "scheme": "batipro"
+  }
+}

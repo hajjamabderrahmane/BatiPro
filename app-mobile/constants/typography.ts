@@ -1,0 +1,17 @@
+export const Typography = {
+  fontRegular: 'Inter_400Regular',
+  fontMedium: 'Inter_500Medium',
+  fontSemiBold: 'Inter_600SemiBold',
+  fontBold: 'Inter_700Bold',
+  size10: 10,
+  size11: 11,
+  size12: 12,
+  size13: 13,
+  size14: 14,
+  size16: 16,
+  size18: 18,
+  size20: 20,
+  size24: 24,
+  size28: 28,
+  size32: 32,
+};
