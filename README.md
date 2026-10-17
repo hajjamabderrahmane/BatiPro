@@ -1,4 +1,4 @@
-# BatiPro — Gestion du pointage des chantiers
+# BatiPro : Gestion du pointage sur les chantiers
 
 BatiPro est une application de gestion du pointage des employés sur les chantiers. Elle centralise les utilisateurs, les chantiers, les affectations et les présences à travers une API REST et des interfaces web et mobile.
 
