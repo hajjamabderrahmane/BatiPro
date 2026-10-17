@@ -52,8 +52,6 @@ git clone -b main https://github.com/hajjamabderrahmane/BatiPro.git
 cd BatiPro
 ```
 
-Le dépôt est privé : un accès GitHub autorisé est nécessaire.
-
 ## 1. Installer et configurer le back-end
 
 Depuis la racine du dépôt :
@@ -64,7 +62,7 @@ composer install
 Copy-Item .env.example .env
 ```
 
-Ouvrir le fichier `.env` et adapter la configuration MySQL à l'environnement local. Exemple :
+Le fichier `.env.example` utilise SQLite par défaut. Pour suivre la configuration MySQL décrite ici, ouvrir `.env`, remplacer `DB_CONNECTION=sqlite` par le bloc MySQL ci-dessous, puis adapter les identifiants à l'environnement local. Exemple :
 
 ```env
 APP_NAME=BatiPro
