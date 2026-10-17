@@ -1,26 +1,41 @@
 # BatiPro — Gestion du pointage des chantiers
 
-BatiPro est une application de gestion du pointage des employés sur les chantiers. Le projet est organisé en trois parties :
+BatiPro est une application de gestion du pointage des employés sur les chantiers. Elle centralise les utilisateurs, les chantiers, les affectations et les présences à travers une API REST et des interfaces web et mobile.
 
-- **back-end** : API REST avec Laravel et MySQL.
-- **app-web** : interface web avec React et Vite.
-- **app-mobile** : application mobile avec React Native et Expo.
+## Architecture du dépôt
 
-## 1. Prérequis
+```text
+BatiPro/
+├── back-end/       # API REST Laravel
+├── app-web/        # Interface web React
+├── app-mobile/     # Application mobile React Native / Expo
+└── README.md
+```
 
-Installer les outils suivants sur la machine :
+## Fonctionnalités
 
-- Git
-- PHP **8.3 ou plus récent**, avec les extensions requises par Laravel
-- Composer
-- MySQL (par exemple via WampServer)
-- Node.js et npm
-- Un navigateur web
-- Pour tester l'application mobile : Expo Go sur un téléphone compatible, ou un émulateur Android configuré
+- Authentification par JWT et gestion des rôles.
+- Gestion des utilisateurs, des chantiers et des affectations.
+- Enregistrement et consultation des pointages.
+- Pointage mobile avec QR code et localisation GPS.
+
+## Technologies
+
+| Partie | Technologies |
+|---|---|
+| Back-end | PHP, Laravel, API REST, JWT |
+| Base de données | MySQL |
+| Application web | React, Tailwind CSS |
+| Application mobile | React Native, Expo |
+| Outils | Git, GitHub, VS Code, Postman |
+
+## Prérequis
+
+Installer Git, PHP avec les extensions nécessaires à Laravel, Composer, MySQL, Node.js et npm. Pour tester l'application mobile, utiliser Expo Go compatible avec la version du projet ou un émulateur Android configuré.
 
 Vérifier les installations :
 
-```bash
+```powershell
 git --version
 php -v
 composer --version
@@ -28,35 +43,28 @@ node -v
 npm -v
 ```
 
-## 2. Récupérer le projet
+## Récupérer le projet
 
-```bash
-git clone https://github.com/hajjamabderrahmane/BatiPro.git
+Pour récupérer la branche contenant cette version du projet :
+
+```powershell
+git clone -b restore-before-seeder https://github.com/hajjamabderrahmane/BatiPro.git
 cd BatiPro
 ```
 
-> Si le dépôt reste privé, l'utilisateur doit avoir accès au dépôt GitHub pour pouvoir le cloner.
+Le dépôt est privé : un accès GitHub autorisé est nécessaire.
 
-## 3. Configurer et démarrer le back-end Laravel
+## 1. Installer et configurer le back-end
 
-### 3.1 Installer les dépendances PHP
+Depuis la racine du dépôt :
 
-```bash
+```powershell
 cd back-end
 composer install
+Copy-Item .env.example .env
 ```
 
-### 3.2 Créer le fichier d'environnement
-
-Sous Windows (Invite de commandes) :
-
-```cmd
-copy .env.example .env
-```
-
-Sous PowerShell, la même commande fonctionne. Ensuite, ouvrir `.env` et configurer au minimum les paramètres de l'application et de la base de données.
-
-Pour utiliser MySQL, renseigner les paramètres correspondant à l'installation locale. Exemple à adapter :
+Ouvrir le fichier `.env` et adapter la configuration MySQL à l'environnement local. Exemple :
 
 ```env
 APP_NAME=BatiPro
@@ -72,105 +80,109 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-**Important :** créer d'abord une base de données vide nommée `pointage_db` dans MySQL/phpMyAdmin, ou choisir un autre nom et utiliser le même dans `.env`. Adapter l'utilisateur et le mot de passe à la configuration MySQL locale. Ne jamais publier le vrai fichier `.env` ni ses mots de passe.
+Créer d'abord la base de données vide `pointage_db` dans MySQL ou phpMyAdmin. Adapter le nom de la base, l'utilisateur et le mot de passe si nécessaire.
 
-Le fichier `.env.example` du dépôt peut contenir des valeurs par défaut différentes : vérifier que `DB_CONNECTION` est bien réglé sur `mysql` si MySQL est utilisé.
+Générer les clés et créer les tables :
 
-### 3.3 Générer les clés et préparer la base
-
-```bash
+```powershell
 php artisan key:generate
 php artisan jwt:secret
 php artisan config:clear
 php artisan migrate
 ```
 
-- `key:generate` génère la clé de l'application Laravel.
-- `jwt:secret` génère le secret JWT si la commande est disponible et que le projet utilise cette configuration.
-- `migrate` crée les tables définies par les migrations versionnées dans le dépôt.
+La commande `jwt:secret` est à exécuter si elle est disponible dans la configuration JWT du projet.
 
-Les migrations du projet couvrent notamment les utilisateurs, les chantiers, les affectations et les pointages. Les migrations créent la structure des tables, mais ne recopient pas automatiquement les données présentes dans la base locale du développeur. Si des comptes ou des données initiales sont nécessaires, ils doivent être fournis par des seeders ou créés selon la procédure prévue par le projet.
+### Créer le compte administrateur de développement
 
-### 3.4 Démarrer l'API
+Après les migrations, exécuter :
 
-Pour un test local sur la même machine :
-
-```bash
-php artisan serve
+```powershell
+php artisan db:seed
 ```
 
-Pour autoriser un téléphone connecté au même réseau Wi-Fi à joindre l'API, démarrer plutôt le serveur avec :
+Le seeder crée ou met à jour le compte administrateur local suivant :
 
-```bash
+| Champ | Valeur |
+|---|---|
+| E-mail | `admin@batipro.local` |
+| Mot de passe initial | `ChangeMe123!` |
+| Rôle | `admin` |
+
+Ce compte est destiné au développement local uniquement. Changer son mot de passe avant toute utilisation dans un environnement partagé ou en production. Le seeder ne crée pas automatiquement de chantiers, d'affectations ou de présences.
+
+### Démarrer l'API
+
+Pour permettre à l'application mobile sur le téléphone d'accéder à l'API, lancer le serveur depuis le dossier `back-end` :
+
+```powershell
 php artisan serve --host=0.0.0.0 --port=8000
 ```
 
-L'API est alors accessible depuis la machine hôte à `http://127.0.0.1:8000`. Depuis un téléphone, remplacer `127.0.0.1` par l'adresse IP locale du PC, par exemple `http://192.168.x.x:8000`. Le téléphone et le PC doivent être sur le même réseau, et le pare-feu Windows doit autoriser la connexion.
+L'API est servie sur le port `8000`. Le téléphone et le PC doivent être connectés au même réseau local, et le pare-feu Windows doit autoriser la connexion.
 
-> Vérifier dans le code mobile où l'URL de base de l'API est définie et la remplacer par l'adresse IP locale de la machine qui exécute Laravel. Ne pas utiliser `localhost` ou `127.0.0.1` dans l'application mobile pour viser le PC : sur le téléphone, ces adresses désignent le téléphone lui-même.
+## 2. Installer et démarrer l'application web
 
-## 4. Installer et démarrer l'application web
+Ouvrir un nouveau terminal à la racine du dépôt :
 
-Ouvrir un **nouveau terminal** depuis la racine du dépôt :
-
-```bash
+```powershell
 cd app-web
 npm install
 npm run dev
 ```
 
-Vite affiche l'adresse locale à ouvrir dans le navigateur, généralement `http://localhost:5173`.
+Ouvrir dans le navigateur l'adresse locale affichée par Vite, généralement `http://localhost:5173`.
 
 Pour vérifier la compilation de production :
 
-```bash
+```powershell
 npm run build
 ```
 
-## 5. Installer et démarrer l'application mobile
+## 3. Installer et démarrer l'application mobile
 
-Ouvrir un **nouveau terminal** depuis la racine du dépôt :
+Ouvrir un autre terminal à la racine du dépôt :
 
-```bash
+```powershell
 cd app-mobile
 npm install
 npm start
 ```
 
-Suivre les instructions affichées par Expo. Pour utiliser un téléphone, installer Expo Go si la version de l'application est compatible, puis scanner le QR code affiché dans le terminal. Le téléphone doit pouvoir accéder à l'API via l'adresse IP locale du PC.
+Le script `npm start` lance d'abord `scripts/detect-ip.js`, qui détecte une adresse IPv4 privée du PC et met à jour `app-mobile/.env` avec la variable `EXPO_PUBLIC_API_URL`. Expo démarre ensuite.
 
-Scripts disponibles :
+Scanner le QR code affiché par Expo avec Expo Go compatible. Le téléphone doit être sur le même réseau que le PC et pouvoir joindre le port `8000`.
 
-```bash
+Scripts supplémentaires disponibles :
+
+```powershell
 npm run android
 npm run ios
 npm run web
 ```
 
-- `npm run android` démarre Expo avec la cible Android (émulateur configuré requis selon l'environnement).
+- `npm run android` lance Expo pour Android.
 - `npm run ios` est destiné à un environnement compatible iOS.
-- `npm run web` démarre la version web Expo si elle est prise en charge par l'environnement installé.
+- `npm run web` lance la cible web Expo si elle est prise en charge par l'environnement installé.
 
-## 6. Dépendances et fichiers ignorés par Git
+**Remarque :** la détection automatique de l'adresse IP est exécutée par `npm start`. Utiliser cette commande pour que le fichier local `app-mobile/.env` soit actualisé avant le démarrage d'Expo.
 
-Les dossiers `node_modules/` et `back-end/vendor/` ne sont pas stockés dans Git. Chaque développeur les recrée avec `npm install` et `composer install`.
+## Ordre de démarrage recommandé
 
-Le fichier `.env` est local et ignoré par Git. Seul le fichier modèle `.env.example` doit être partagé, sans mot de passe ni secret personnel.
-
-## 7. Ordre de démarrage recommandé
-
-1. Démarrer MySQL.
-2. Démarrer l'API Laravel depuis `back-end`.
-3. Démarrer l'interface web depuis `app-web), si nécessaire.
+1. Démarrer le service MySQL.
+2. Démarrer Laravel depuis `back-end`.
+3. Démarrer l'interface web depuis `app-web`, si nécessaire.
 4. Démarrer l'application mobile depuis `app-mobile`, si nécessaire.
 
-## 8. Dépannage rapide
+## Dépannage
 
-- **Erreur de connexion MySQL** : vérifier que le service MySQL est démarré, que le port est correct et que les identifiants de `.env` correspondent à la configuration locale.
-- **Les migrations échouent** : vérifier la connexion à la base et consulter le message d'erreur avant de relancer une commande destructive. Éviter `php artisan migrate:fresh` sur une base contenant des données à conserver.
-- **Le mobile n'atteint pas l'API** : vérifier l'adresse IP locale du PC, le même réseau Wi-Fi, le port 8000 et le pare-feu Windows.
-- **Une dépendance manque** : lancer `composer install` dans `back-end`, ou `npm install` dans le dossier web/mobile concerné.
+- **Connexion MySQL impossible :** vérifier que MySQL est démarré et que les paramètres de `back-end/.env` sont corrects.
+- **Migrations en erreur :** lire le message affiché et vérifier la connexion à la base. Ne pas utiliser `php artisan migrate:fresh` sur une base contenant des données à conserver.
+- **Le mobile ne rejoint pas l'API :** vérifier le Wi-Fi, le pare-feu Windows, le port `8000` et l'adresse écrite dans `app-mobile/.env`. Relancer `npm start` pour recalculer l'adresse IP.
+- **Dépendances manquantes :** lancer `composer install` dans `back-end` ou `npm install` dans le dossier de l'application concernée.
 
-## Technologies
+## Fichiers d'environnement et dépendances
 
-Laravel · PHP · MySQL · React · Vite · React Native · Expo · npm · Composer
+Les dossiers `node_modules/` et `back-end/vendor/` sont recréés localement à l'aide de `npm install` et `composer install`.
+
+Les fichiers `.env` contiennent des paramètres locaux et des secrets : ils ne doivent pas être commités. Le fichier `app-mobile/.env` est ignoré par Git et est généré ou actualisé par le script de détection IP. Ne jamais publier de mot de passe, de clé JWT ou de secret réel.
