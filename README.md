@@ -1,4 +1,4 @@
-# BatiPro — Gestion du pointage sur les chantiers
+# BatiPro : Gestion du pointage sur les chantiers
 
 BatiPro est une application de gestion du pointage des employés sur les chantiers. Le projet comprend une API REST Laravel, une interface web React et une application mobile React Native / Expo.
 
